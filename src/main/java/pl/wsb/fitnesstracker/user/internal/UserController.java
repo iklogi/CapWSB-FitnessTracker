@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import pl.wsb.fitnesstracker.user.api.User;
+
 
 @RestController
 @RequestMapping("/v1/users")
@@ -25,11 +27,44 @@ class UserController {
     @PostMapping
     public UserDto addUser(@RequestBody UserDto userDto) throws InterruptedException {
 
-        // TODO: Implement the method to add a new user.
-        //  You can use the @RequestBody annotation to map the request body to the UserDto object.
+        User user = userMapper.toEntity(userDto);
+        User savedUser = userService.createUser(user);
+        return userMapper.toDto(savedUser);
 
 
-        return null;
     }
+
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable Long id) {
+        return userService.getUser(id)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+
+    @GetMapping("/search/email")
+    public List<UserDto> findByEmailFragment(@RequestParam String query) {
+        return userService.findUsersByEmailFragment(query)
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
+    @GetMapping("/older-than/{age}")
+    public List<UserDto> getUsersOlderThan(@PathVariable int age) {
+        return userService.findUsersOlderThan(age).stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
+    @PutMapping("/{id}")
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        return userMapper.toDto(userService.updateUser(id, userDto));
+    }
+
 
 }
