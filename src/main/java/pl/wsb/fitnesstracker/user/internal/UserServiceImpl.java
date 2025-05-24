@@ -15,7 +15,7 @@ import java.util.Optional;
 @Slf4j
 class UserServiceImpl implements UserService, UserProvider {
 
-    private final UserRepository userRepository;
+    public final UserRepository userRepository;
 
     @Override
     public User createUser(final User user) {
