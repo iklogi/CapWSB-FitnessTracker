@@ -65,6 +65,11 @@ class UserController {
     public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         return userMapper.toDto(userService.updateUser(id, userDto));
     }
-
+    @GetMapping("/basic")
+    public List<BasicUserDto> getBasicUsers() {
+        return userService.findAllUsers().stream()
+                .map(userMapper::toBasicDto)
+                .toList();
+    }
 
 }
