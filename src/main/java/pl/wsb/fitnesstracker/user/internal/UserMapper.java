@@ -1,29 +1,35 @@
 package pl.wsb.fitnesstracker.user.internal;
 
-import org.springframework.stereotype.Component;
+import pl.wsb.fitnesstracker.user.api.BasicUserEmailDto;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserDto;
 
-@Component
 public class UserMapper {
 
-    public UserDto toDto(User user) {
+    public UserDto toDto(User entity) {
         return new UserDto(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getBirthdate(),
-                user.getEmail()
+                entity.getId(),
+                entity.getFirstName(),
+                entity.getLastName(),
+                entity.getBirthdate(),
+                entity.getEmail()
         );
     }
 
-    public User toEntity(UserDto userDto) {
+    public User fromDto(UserDto dto) {
         User u = new User(
-                userDto.firstName(),
-                userDto.lastName(),
-                userDto.birthdate(),
-                userDto.email()
+                dto.firstName(),
+                dto.lastName(),
+                dto.birthdate(),
+                dto.email()
         );
+        if (dto.id() != null) {
+            u.setId(dto.id());
+        }
         return u;
+    }
+
+    public BasicUserEmailDto toBasicEmailDto(User entity) {
+        return new BasicUserEmailDto(entity.getId(), entity.getEmail());
     }
 }

@@ -8,6 +8,7 @@ import pl.wsb.fitnesstracker.user.internal.UserRepository;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
 import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -15,7 +16,6 @@ import java.util.Date;
 @Component
 @Profile("loadInitialData")
 public class InitialDataLoader {
-
     private final UserRepository userRepository;
     private final TrainingRepository trainingRepository;
 

@@ -6,14 +6,15 @@ import org.mockito.Mockito;
 import pl.wsb.fitnesstracker.user.api.BasicUserEmailDto;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserDto;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class UserServiceUnitTest {
-
     private UserRepository userRepository;
     private UserMapper userMapper;
     private UserServiceImpl userService;

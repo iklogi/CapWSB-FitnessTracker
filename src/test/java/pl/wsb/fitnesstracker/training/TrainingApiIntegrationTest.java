@@ -8,14 +8,15 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import pl.wsb.fitnesstracker.training.api.TrainingDto;
 import pl.wsb.fitnesstracker.user.api.UserDto;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TrainingApiIntegrationTest {
-
     @LocalServerPort
     private int port;
 

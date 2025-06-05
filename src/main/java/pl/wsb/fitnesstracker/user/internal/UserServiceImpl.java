@@ -1,8 +1,11 @@
 package pl.wsb.fitnesstracker.user.internal;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import pl.wsb.fitnesstracker.user.api.*;
+import pl.wsb.fitnesstracker.user.api.BasicUserEmailDto;
+import pl.wsb.fitnesstracker.user.api.User;
+import pl.wsb.fitnesstracker.user.api.UserDto;
+import pl.wsb.fitnesstracker.user.api.UserService;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -10,15 +13,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository,UserMapper userMapper) {
-        this.userRepository=userRepository;
-        this.userMapper=userMapper;
+    public UserServiceImpl(UserRepository userRepository,
+                           UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -29,29 +32,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Long id) {
-        Optional<User> maybe=userRepository.findById(id);
-        return maybe.map(userMapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
+    public Optional<UserDto> getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(userMapper::toDto);
     }
 
     @Override
     public UserDto createUser(UserDto dto) {
-        User u=userMapper.toEntity(dto);
-        User saved=userRepository.save(u);
+        User entity = userMapper.fromDto(dto);
+        User saved = userRepository.save(entity);
         return userMapper.toDto(saved);
-    }
-
-    @Override
-    public UserDto updateUser(Long id, UserDto dto) {
-        User existing=userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
-        existing.setFirstName(dto.firstName());
-        existing.setLastName(dto.lastName());
-        existing.setBirthdate(dto.birthdate());
-        existing.setEmail(dto.email());
-        User updated=userRepository.save(existing);
-        return userMapper.toDto(updated);
     }
 
     @Override
@@ -60,16 +50,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<BasicUserEmailDto> searchByEmail(String fragment) {
-        return userRepository.findAllByEmailContainingIgnoreCase(fragment).stream()
-                .map(u -> new BasicUserEmailDto(u.getId(),u.getEmail()))
+    public List<BasicUserEmailDto> searchByEmail(String email) {
+        return userRepository
+                .findAllByEmailContainingIgnoreCase(email)
+                .stream()
+                .map(userMapper::toBasicEmailDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<UserDto> searchByAgeGreaterThan(int age) {
-        LocalDate threshold=LocalDate.now().minusYears(age);
-        return userRepository.findAllByBirthdateBefore(threshold).stream()
+        LocalDate now = LocalDate.now();
+        return userRepository.findAll().stream()
+                .filter(u -> {
+                    Period p = Period.between(u.getBirthdate(), now);
+                    return p.getYears() > age;
+                })
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }

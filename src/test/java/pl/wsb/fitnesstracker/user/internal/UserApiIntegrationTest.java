@@ -8,12 +8,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import pl.wsb.fitnesstracker.user.api.BasicUserEmailDto;
 import pl.wsb.fitnesstracker.user.api.UserDto;
+
 import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserApiIntegrationTest {
-
     @LocalServerPort
     private int port;
 
@@ -65,7 +66,7 @@ class UserApiIntegrationTest {
                 "http://localhost:" + port + "/v1/users/" + id,
                 UserDto.class
         );
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
