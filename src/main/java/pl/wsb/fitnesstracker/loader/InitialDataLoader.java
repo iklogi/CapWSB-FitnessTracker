@@ -1,41 +1,47 @@
 package pl.wsb.fitnesstracker.loader;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
-import pl.wsb.fitnesstracker.user.api.User;
-import pl.wsb.fitnesstracker.user.internal.UserRepository;
-import pl.wsb.fitnesstracker.training.api.Training;
-import pl.wsb.fitnesstracker.training.internal.ActivityType;
-import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.wsb.fitnesstracker.user.api.UserDto;
+import pl.wsb.fitnesstracker.user.api.UserService;
+import pl.wsb.fitnesstracker.training.api.ActivityType;
+import pl.wsb.fitnesstracker.training.api.TrainingDto;
+import pl.wsb.fitnesstracker.training.api.TrainingService;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 @Component
-@Profile("loadInitialData")
 public class InitialDataLoader {
-    private final UserRepository userRepository;
-    private final TrainingRepository trainingRepository;
 
-    public InitialDataLoader(UserRepository userRepository, TrainingRepository trainingRepository) {
-        this.userRepository = userRepository;
-        this.trainingRepository = trainingRepository;
+    private final UserService userService;
+    private final TrainingService trainingService;
+
+    @Autowired
+    public InitialDataLoader(UserService userService, TrainingService trainingService) {
+        this.userService = userService;
+        this.trainingService = trainingService;
     }
 
     @PostConstruct
     public void loadData() {
-        User u1 = new User("Jan", "Kowalski", LocalDate.of(1990, 1, 1), "jan.kowalski@example.com");
-        User u2 = new User("Anna", "Nowak", LocalDate.of(1985, 5, 20), "anna.nowak@example.com");
-        userRepository.save(u1);
-        userRepository.save(u2);
+        UserDto u1 = new UserDto(
+                null,
+                "Jan",
+                "Kowalski",
+                LocalDate.of(1990, 1, 1),
+                "jan.kowalski@example.com"
+        );
+        UserDto savedUser = userService.createUser(u1);
 
-        Date start = Date.from(LocalDate.of(2024, 1, 10).atStartOfDay(ZoneId.of("UTC")).toInstant());
-        Date end = Date.from(LocalDate.of(2024, 1, 10).atStartOfDay(ZoneId.of("UTC")).toInstant());
-        Training t1 = new Training(u1, start, end, ActivityType.RUNNING, 5.0, 6.0);
-        Training t2 = new Training(u2, start, end, ActivityType.WALKING, 3.0, 4.0);
-        trainingRepository.save(t1);
-        trainingRepository.save(t2);
+        TrainingDto t1 = new TrainingDto(
+                null,
+                savedUser.id(),
+                ActivityType.RUNNING,
+                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2025, 1, 1),
+                5.0
+        );
+        trainingService.createTraining(t1);
     }
 }

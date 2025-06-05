@@ -1,9 +1,8 @@
-package pl.wsb.fitnesstracker.training.internal;
+package pl.wsb.fitnesstracker.training.api;
 
 public enum ActivityType {
     RUNNING,
-    CYCLING,
-    TENNIS,
+    BIKING,
     SWIMMING,
-    WALKING
+    WALKING,
 }

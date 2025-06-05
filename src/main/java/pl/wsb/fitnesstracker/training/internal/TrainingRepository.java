@@ -1,9 +1,14 @@
 package pl.wsb.fitnesstracker.training.internal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import pl.wsb.fitnesstracker.training.api.ActivityType;
 import pl.wsb.fitnesstracker.training.api.Training;
 
-@Repository
-public interface TrainingRepository extends JpaRepository<Training,Long> {
+import java.time.LocalDate;
+import java.util.List;
+
+public interface TrainingRepository extends JpaRepository<Training, Long> {
+    List<Training> findAllByUserId(Long userId);
+    List<Training> findAllByEndDateAfter(LocalDate date);
+    List<Training> findAllByActivityType(ActivityType activity);
 }

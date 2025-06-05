@@ -1,72 +1,88 @@
 package pl.wsb.fitnesstracker.training.api;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import pl.wsb.fitnesstracker.training.internal.ActivityType;
-import pl.wsb.fitnesstracker.user.api.User;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name="trainings")
-@Getter
-@NoArgsConstructor
+@Table(name = "trainings")
 public class Training {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="user_id",nullable=false)
-    private User user;
-
-    @Column(name="start_time",nullable=false)
-    private Date startTime;
-
-    @Column(name="end_time",nullable=false)
-    private Date endTime;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="activity_type",nullable=false)
+    @Column(name = "activity_type", nullable = false)
     private ActivityType activityType;
 
-    @Column(name="distance")
-    private double distance;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    @Column(name="average_speed")
-    private double averageSpeed;
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
-    public Training(User user,Date startTime,Date endTime,ActivityType activityType,double distance,double averageSpeed) {
-        this.user=user;
-        this.startTime=startTime;
-        this.endTime=endTime;
-        this.activityType=activityType;
-        this.distance=distance;
-        this.averageSpeed=averageSpeed;
+    @Column(name = "distance", nullable = false)
+    private Double distance;
+
+    public Training() {
     }
 
-    public void setUser(User user) {
-        this.user=user;
+    public Training(Long userId, ActivityType activityType, LocalDate startDate, LocalDate endDate, Double distance) {
+        this.userId = userId;
+        this.activityType = activityType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.distance = distance;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime=startTime;
+    public Long getId() {
+        return id;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime=endTime;
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public ActivityType getActivityType() {
+        return activityType;
     }
 
     public void setActivityType(ActivityType activityType) {
-        this.activityType=activityType;
+        this.activityType = activityType;
     }
 
-    public void setDistance(double distance) {
-        this.distance=distance;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setAverageSpeed(double averageSpeed) {
-        this.averageSpeed=averageSpeed;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
