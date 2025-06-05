@@ -1,11 +1,9 @@
-// File: src/main/java/pl/wsb/fitnesstracker/user/api/User.java
 package pl.wsb.fitnesstracker.user.api;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
 import java.time.LocalDate;
 
 @Entity
