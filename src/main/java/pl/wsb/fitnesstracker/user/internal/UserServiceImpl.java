@@ -1,67 +1,52 @@
 package pl.wsb.fitnesstracker.user.internal;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.wsb.fitnesstracker.user.api.User;
-import pl.wsb.fitnesstracker.user.api.UserProvider;
+import pl.wsb.fitnesstracker.user.api.UserDto;
 import pl.wsb.fitnesstracker.user.api.UserService;
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-class UserServiceImpl implements UserService, UserProvider {
+@Transactional
+public class UserServiceImpl implements UserService {
 
-    public final UserRepository userRepository;
-
-    @Override
-    public User createUser(final User user) {
-        log.info("Creating User {}", user);
-        if (user.getId() != null) {
-            throw new IllegalArgumentException("User has already DB ID, update is not permitted!");
-        }
-        return userRepository.save(user);
-    }
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
-    public Optional<User> getUser(final Long userId) {
-        return userRepository.findById(userId);
-    }
-
-    @Override
-    public Optional<User> getUserByEmail(final String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    public List<User> findUsersByEmailFragment(String fragment) {
-        return userRepository.findByEmailContainingIgnoreCase(fragment);
-    }
-
-    public List<User> findUsersOlderThan(int age) {
-        LocalDate cutoffDate = LocalDate.now().minusYears(age);
+    public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .filter(user -> user.getBirthdate().isBefore(cutoffDate))
-                .toList();
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public User updateUser(Long id, UserDto dto) {
-        User existing = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        existing = new User(dto.firstName(), dto.lastName(), dto.birthdate(), dto.email());
-        return userRepository.save(existing);
+    @Override
+    public UserDto getUserById(Long id) {
+        Optional<User> maybe = userRepository.findById(id);
+        return maybe.map(userMapper::toDto).orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
     }
 
+    @Override
+    public UserDto createUser(UserDto dto) {
+        User u = userMapper.toEntity(dto);
+        User saved = userRepository.save(u);
+        return userMapper.toDto(saved);
+    }
 
+    @Override
+    public UserDto updateUser(Long id, UserDto dto) {
+        User existing = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
+        existing.setFirstName(dto.firstName());
+        existing.setLastName(dto.lastName());
+        existing.setBirthdate(dto.birthdate());
+        existing.setEmail(dto.email());
+        User updated = userRepository.save(existing);
+        return userMapper.toDto(updated);
+    }
 }

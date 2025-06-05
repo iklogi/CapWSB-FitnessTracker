@@ -15,7 +15,6 @@ import java.util.Date;
 public class TrainingDto {
 
     private Long id;
-
     private UserDto user;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "UTC")
@@ -25,8 +24,6 @@ public class TrainingDto {
     private Date endTime;
 
     private ActivityType activityType;
-
     private double distance;
-
     private double averageSpeed;
 }

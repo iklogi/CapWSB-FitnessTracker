@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import pl.wsb.fitnesstracker.training.api.TrainingDto;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.user.internal.UserMapper;
-
+import pl.wsb.fitnesstracker.user.api.User;
 
 @Component
 @RequiredArgsConstructor
@@ -14,10 +14,7 @@ public class TrainingMapper {
     private final UserMapper userMapper;
 
     public TrainingDto toDto(Training entity) {
-        if (entity == null) {
-            return null;
-        }
-
+        if (entity == null) return null;
         return new TrainingDto(
                 entity.getId(),
                 userMapper.toDto(entity.getUser()),
@@ -30,19 +27,18 @@ public class TrainingMapper {
     }
 
     public Training toEntity(TrainingDto dto) {
-        if (dto == null) {
-            return null;
-        }
-        var userDto = dto.getUser();
-        pl.wsb.fitnesstracker.user.api.User userEntity = new pl.wsb.fitnesstracker.user.api.User();
+        if (dto == null) return null;
 
-        Training t = new Training();
-        t.setUser(userEntity);
-        t.setStartTime(dto.getStartTime());
-        t.setEndTime(dto.getEndTime());
-        t.setActivityType(dto.getActivityType());
-        t.setDistance(dto.getDistance());
-        t.setAverageSpeed(dto.getAverageSpeed());
-        return t;
+        User userEntity = new User();
+        userEntity.setId(dto.getUser().id());
+
+        return new Training(
+                userEntity,
+                dto.getStartTime(),
+                dto.getEndTime(),
+                dto.getActivityType(),
+                dto.getDistance(),
+                dto.getAverageSpeed()
+        );
     }
 }

@@ -1,75 +1,38 @@
+// File: src/main/java/pl/wsb/fitnesstracker/user/internal/UserController.java
 package pl.wsb.fitnesstracker.user.internal;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.wsb.fitnesstracker.user.api.UserDto;
+import pl.wsb.fitnesstracker.user.api.UserService;
 
 import java.util.List;
-import pl.wsb.fitnesstracker.user.api.User;
-
 
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
-class UserController {
+public class UserController {
 
-    private final UserServiceImpl userService;
-
-    private final UserMapper userMapper;
+    private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.findAllUsers()
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
-    @PostMapping
-    public UserDto addUser(@RequestBody UserDto userDto) throws InterruptedException {
-
-        User user = userMapper.toEntity(userDto);
-        User savedUser = userService.createUser(user);
-        return userMapper.toDto(savedUser);
-
-
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Long id) {
-        return userService.getUser(id)
-                .map(userMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-    }
-
-    @GetMapping("/search/email")
-    public List<UserDto> findByEmailFragment(@RequestParam String query) {
-        return userService.findUsersByEmailFragment(query)
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
-    @GetMapping("/older-than/{age}")
-    public List<UserDto> getUsersOlderThan(@PathVariable int age) {
-        return userService.findUsersOlderThan(age).stream()
-                .map(userMapper::toDto)
-                .toList();
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
+        return ResponseEntity.ok(userService.createUser(dto));
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-        return userMapper.toDto(userService.updateUser(id, userDto));
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto dto) {
+        return ResponseEntity.ok(userService.updateUser(id, dto));
     }
-    @GetMapping("/basic")
-    public List<BasicUserDto> getBasicUsers() {
-        return userService.findAllUsers().stream()
-                .map(userMapper::toBasicDto)
-                .toList();
-    }
-
 }
