@@ -1,24 +1,28 @@
 package pl.wsb.fitnesstracker.loader;
 
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.internal.UserRepository;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
 import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
+@Profile("loadInitialData")
 public class InitialDataLoader {
 
     private final UserRepository userRepository;
     private final TrainingRepository trainingRepository;
+
+    public InitialDataLoader(UserRepository userRepository, TrainingRepository trainingRepository) {
+        this.userRepository = userRepository;
+        this.trainingRepository = trainingRepository;
+    }
 
     @PostConstruct
     public void loadData() {
@@ -27,10 +31,10 @@ public class InitialDataLoader {
         userRepository.save(u1);
         userRepository.save(u2);
 
-        Date start1 = Date.from(LocalDate.of(2024, 1, 10).atStartOfDay(ZoneId.of("UTC")).toInstant());
-        Date end1 = Date.from(LocalDate.of(2024, 1, 10).atStartOfDay(ZoneId.of("UTC")).toInstant());
-        Training t1 = new Training(u1, start1, end1, ActivityType.RUNNING, 5.0, 6.0);
-        Training t2 = new Training(u2, start1, end1, ActivityType.WALKING, 3.0, 4.0);
+        Date start = Date.from(LocalDate.of(2024, 1, 10).atStartOfDay(ZoneId.of("UTC")).toInstant());
+        Date end = Date.from(LocalDate.of(2024, 1, 10).atStartOfDay(ZoneId.of("UTC")).toInstant());
+        Training t1 = new Training(u1, start, end, ActivityType.RUNNING, 5.0, 6.0);
+        Training t2 = new Training(u2, start, end, ActivityType.WALKING, 3.0, 4.0);
         trainingRepository.save(t1);
         trainingRepository.save(t2);
     }

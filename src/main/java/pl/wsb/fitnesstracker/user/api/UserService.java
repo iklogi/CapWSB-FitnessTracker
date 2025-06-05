@@ -7,4 +7,7 @@ public interface UserService {
     UserDto getUserById(Long id);
     UserDto createUser(UserDto dto);
     UserDto updateUser(Long id, UserDto dto);
+    void deleteUser(Long id);
+    List<BasicUserEmailDto> searchByEmail(String fragment);
+    List<UserDto> searchByAgeGreaterThan(int age);
 }

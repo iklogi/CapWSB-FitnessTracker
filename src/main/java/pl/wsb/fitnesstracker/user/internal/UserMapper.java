@@ -24,7 +24,6 @@ public class UserMapper {
                 userDto.birthdate(),
                 userDto.email()
         );
-        u.setId(userDto.id());
         return u;
     }
 }

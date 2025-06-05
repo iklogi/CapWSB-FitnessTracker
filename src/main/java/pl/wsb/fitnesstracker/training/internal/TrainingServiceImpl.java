@@ -1,4 +1,3 @@
-
 package pl.wsb.fitnesstracker.training.internal;
 
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import pl.wsb.fitnesstracker.training.api.TrainingService;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.internal.UserRepository;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,8 +21,7 @@ public class TrainingServiceImpl implements TrainingService {
 
     private final TrainingRepository trainingRepository;
     private final UserRepository userRepository;
-
-    private static final SimpleDateFormat DATE_ONLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_ONLY_FORMAT=new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public List<Training> getAllTrainings() {
@@ -54,8 +51,8 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public Training createTraining(Training newTraining) {
-        Long userId = newTraining.getUser().getId();
-        Optional<User> maybeUser = userRepository.findById(userId);
+        Long userId=newTraining.getUser().getId();
+        Optional<User> maybeUser=userRepository.findById(userId);
         if (maybeUser.isEmpty()) {
             throw new IllegalArgumentException("User not found: " + userId);
         }
@@ -64,8 +61,8 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public Training updateTraining(Long trainingId, Training updatedTraining) {
-        Training existing = trainingRepository.findById(trainingId)
+    public Training updateTraining(Long trainingId,Training updatedTraining) {
+        Training existing=trainingRepository.findById(trainingId)
                 .orElseThrow(() -> new IllegalArgumentException("Training not found: " + trainingId));
         existing.setStartTime(updatedTraining.getStartTime());
         existing.setEndTime(updatedTraining.getEndTime());

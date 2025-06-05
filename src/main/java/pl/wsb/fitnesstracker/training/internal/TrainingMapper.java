@@ -14,7 +14,7 @@ public class TrainingMapper {
     private final UserMapper userMapper;
 
     public TrainingDto toDto(Training entity) {
-        if (entity == null) return null;
+        if (entity==null) return null;
         return new TrainingDto(
                 entity.getId(),
                 userMapper.toDto(entity.getUser()),
@@ -27,11 +27,9 @@ public class TrainingMapper {
     }
 
     public Training toEntity(TrainingDto dto) {
-        if (dto == null) return null;
-
-        User userEntity = new User();
+        if (dto==null) return null;
+        User userEntity=new User();
         userEntity.setId(dto.getUser().id());
-
         return new Training(
                 userEntity,
                 dto.getStartTime(),

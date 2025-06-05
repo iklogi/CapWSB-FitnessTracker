@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import pl.wsb.fitnesstracker.training.api.Training;
 
 @Repository
-public interface TrainingRepository extends JpaRepository<Training, Long> {
+public interface TrainingRepository extends JpaRepository<Training,Long> {
 }
