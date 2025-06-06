@@ -1,0 +1,92 @@
+{
+	"info": {
+		"_postman_id": "b75c4284-bb79-41d0-8895-637eac547e5e",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45271212",
+		"_collection_link": "https://mateuszkonopka.postman.co/workspace/Mateusz-Konopka's-Workspace~da4178dd-e5f4-49ff-8e54-9d5404a694e6/collection/45271212-b75c4284-bb79-41d0-8895-637eac547e5e?action=share&source=collection_link&creator=45271212"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8081",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/v1/trainings/byActivity?activity=RUNNING",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"v1",
+						"trainings",
+						"byActivity"
+					],
+					"query": [
+						{
+							"key": "activity",
+							"value": "RUNNING"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081 Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/v1/trainings/byActivity?activity=RUNNING",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"v1",
+						"trainings",
+						"byActivity"
+					],
+					"query": [
+						{
+							"key": "activity",
+							"value": "RUNNING"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/v1/users/ageGreaterThan?age=30",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/v1/users/ageGreaterThan?age=30",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"v1",
+						"users",
+						"ageGreaterThan"
+					],
+					"query": [
+						{
+							"key": "age",
+							"value": "30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
