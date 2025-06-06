@@ -1,9 +1,11 @@
 package pl.wsb.fitnesstracker.user.internal;
 
+import org.springframework.stereotype.Component;
 import pl.wsb.fitnesstracker.user.api.BasicUserEmailDto;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserDto;
 
+@Component
 public class UserMapper {
 
     public UserDto toDto(User entity) {
