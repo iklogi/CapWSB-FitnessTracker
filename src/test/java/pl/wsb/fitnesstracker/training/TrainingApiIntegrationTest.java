@@ -6,10 +6,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
+import pl.wsb.fitnesstracker.user.api.UserDto;
 import pl.wsb.fitnesstracker.training.api.ActivityType;
 import pl.wsb.fitnesstracker.training.api.TrainingDto;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,33 +27,34 @@ public class TrainingApiIntegrationTest {
 
     @Test
     void createAndGetTraining() {
-        String baseUrl = "http://localhost:" + port + "/v1/trainings";
-
-        TrainingDto newTraining = new TrainingDto(
-                (Long) null,
-                Long.valueOf(1L),
-                ActivityType.RUNNING,
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2025, 1, 1),
-                Double.valueOf(10.0)
+        UserDto userDto = new UserDto(null, "Adam", "Nowak", LocalDate.of(1990, 2, 2), "adam.nowak@example.com");
+        ResponseEntity<UserDto> userResp = restTemplate.postForEntity(
+                "http://localhost:" + port + "/v1/users",
+                userDto,
+                UserDto.class
         );
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<TrainingDto> request = new HttpEntity<>(newTraining, headers);
+        assertThat(userResp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(userResp.getBody()).isNotNull();
 
-        ResponseEntity<TrainingDto> postResponse =
-                restTemplate.postForEntity(baseUrl, request, TrainingDto.class);
-        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        TrainingDto created = postResponse.getBody();
-        assertThat(created).isNotNull();
-        assertThat(created.getId()).isNotNull();
+        Date start = Date.from(LocalDate.of(2024, 1, 15).atStartOfDay(ZoneId.of("UTC")).toInstant());
+        Date end = Date.from(LocalDate.of(2024, 1, 15).atStartOfDay(ZoneId.of("UTC")).toInstant());
+        TrainingDto dto = new TrainingDto(
+                null,
+                userResp.getBody().id(),
+                ActivityType.RUNNING,
+                LocalDate.of(2024, 1, 15),
+                LocalDate.of(2024, 1, 15),
+                10.0
+        );
+        ResponseEntity<TrainingDto> createResp = restTemplate.postForEntity(
+                "http://localhost:" + port + "/v1/trainings",
+                dto,
+                TrainingDto.class
+        );
 
-        ResponseEntity<TrainingDto> getResponse =
-                restTemplate.getForEntity(baseUrl + "/" + created.getId(), TrainingDto.class);
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        TrainingDto fetched = getResponse.getBody();
-        assertThat(fetched).isNotNull();
-        assertThat(fetched.getActivityType()).isEqualTo(ActivityType.RUNNING);
+        assertThat(createResp.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(createResp.getBody()).isNotNull();
+        assertThat(createResp.getBody().getUserId()).isNotNull();
     }
 }

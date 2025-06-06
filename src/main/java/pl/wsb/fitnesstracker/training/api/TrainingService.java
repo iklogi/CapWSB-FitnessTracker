@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TrainingService {
-
     List<TrainingDto> getAllTrainings();
     Optional<TrainingDto> getTrainingById(Long id);
     List<TrainingDto> getTrainingsByUserId(Long userId);

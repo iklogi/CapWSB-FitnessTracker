@@ -11,8 +11,7 @@ public class TrainingDto {
     private LocalDate endDate;
     private Double distance;
 
-    public TrainingDto() {
-    }
+    public TrainingDto() { }
 
     public TrainingDto(Long id, Long userId, ActivityType activityType, LocalDate startDate, LocalDate endDate, Double distance) {
         this.id = id;

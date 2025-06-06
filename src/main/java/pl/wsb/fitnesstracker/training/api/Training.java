@@ -27,8 +27,7 @@ public class Training {
     @Column(name = "distance", nullable = false)
     private Double distance;
 
-    public Training() {
-    }
+    public Training() { }
 
     public Training(Long userId, ActivityType activityType, LocalDate startDate, LocalDate endDate, Double distance) {
         this.userId = userId;
